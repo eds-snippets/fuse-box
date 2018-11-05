@@ -121,7 +121,7 @@ export class FlatFileGenerator {
 		this.contents.add(null, "\n");
 		if (this.core.context.useSourceMaps) {
 			this.sourceMapsPath = `${bundle.name}_quantum.js.map`;
-			this.contents.add(null, "//# sourceMappingURL=" + this.sourceMapsPath);
+			this.contents.add(null, "//# sourceMappingURL=" + this.core.opts.getSourceMapsPath(this.sourceMapsPath));
 		}
 		return this.contents;
 	}

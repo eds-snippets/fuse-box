@@ -1,6 +1,6 @@
 import { WebIndexPluginClass } from "../../plugins/WebIndexPlugin";
 import { QuantumCore } from "./QuantumCore";
-import { readFuseBoxModule, hashString } from "../../Utils";
+import { readFuseBoxModule, hashString, joinFuseBoxPath } from "../../Utils";
 import { FileAbstraction } from "../core/FileAbstraction";
 import { BundleProducer, Bundle } from "../../index";
 export interface ITreeShakeOptions {
@@ -26,6 +26,7 @@ export interface IQuantumExtensionParams {
 	definedExpressions?: { [key: string]: boolean | string | number };
 	processPolyfill?: boolean;
 	sourceMaps?: {
+		path?: string;
 		vendor: boolean;
 	};
 	css?:
@@ -52,6 +53,7 @@ export class QuantumOptions {
 	private processPolyfill = false;
 	private sourceMapsOption: {
 		vendor: boolean;
+		path?: string;
 	};
 	private bakeApiIntoBundle: string[] | true | undefined;
 	private noConflictApi = false;
@@ -101,10 +103,10 @@ export class QuantumOptions {
 		if (opts.api) {
 			this.apiCallback = opts.api;
 		}
-
-		if (opts.definedExpressions) {
-			this.definedExpressions = opts.definedExpressions;
-		}
+		if (opts.sourceMaps)
+			if (opts.definedExpressions) {
+				this.definedExpressions = opts.definedExpressions;
+			}
 		if (opts.manifest !== undefined) {
 			if (typeof opts.manifest === "string") {
 				this.manifestFile = opts.manifest;
@@ -218,6 +220,14 @@ export class QuantumOptions {
 
 	public getCSSPath() {
 		return this.cssPath;
+	}
+
+	public getSourceMapsPath(file: string) {
+		let initial = "./";
+		if (this.sourceMapsOption) {
+			initial = this.sourceMapsOption.path || "./";
+		}
+		return joinFuseBoxPath(initial, file);
 	}
 
 	public shouldGenerateVendorSourceMaps() {
