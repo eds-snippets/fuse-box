@@ -103,10 +103,9 @@ export class QuantumOptions {
 		if (opts.api) {
 			this.apiCallback = opts.api;
 		}
-		if (opts.sourceMaps)
-			if (opts.definedExpressions) {
-				this.definedExpressions = opts.definedExpressions;
-			}
+		if (opts.definedExpressions) {
+			this.definedExpressions = opts.definedExpressions;
+		}
 		if (opts.manifest !== undefined) {
 			if (typeof opts.manifest === "string") {
 				this.manifestFile = opts.manifest;
